@@ -1,24 +1,35 @@
-from src import main
+from src.main import get_file_path
 
 
-def test_main(monkeypatch, capsys) -> None:
+def test_get_employees_path(
+    monkeypatch
+) -> None:
     """
-    Verify that main() processes CSV data correctly.
+    Test employees.csv selection.
     """
-
-    def mock_read(self, file_path: str) -> str:
-        return (
-            "id,name\n"
-            "1,Mie"
-        )
-
     monkeypatch.setattr(
-        "src.main.CSVReader.read",
-        mock_read
+        "builtins.input",
+        lambda _: "1"
     )
 
-    main.main()
+    assert (
+        get_file_path()
+        == "data/employees.csv"
+    )
 
-    captured = capsys.readouterr()
 
-    assert "Mie" in captured.out
+def test_get_sogne_path(
+    monkeypatch
+) -> None:
+    """
+    Test sogne.dawa.csv selection.
+    """
+    monkeypatch.setattr(
+        "builtins.input",
+        lambda _: "2"
+    )
+
+    assert (
+        get_file_path()
+        == "data/sogne.dawa.csv"
+    )
