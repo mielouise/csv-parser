@@ -1,25 +1,27 @@
 """
-Main program.
+Application entry point.
 """
 
+from src.csv_reader import CSVReader
+from src.json_exporter import JsonExporter
 from src.parser import CSVParser
 
 
-def main():
+def main() -> None:
     """
-    Run parser example.
+    Run the CSV parser application.
     """
-    csv_text = (
-        "name,age\n"
-        "Mie,23\n"
-        "Anna,25"
-    )
-
+    reader = CSVReader()
     parser = CSVParser()
+    exporter = JsonExporter()
 
-    result = parser.parse(csv_text)
+    csv_text = reader.read("data/employees.csv")
 
-    print(result)
+    parsed_data = parser.parse(csv_text)
+
+    json_output = exporter.to_json(parsed_data)
+
+    print(json_output)
 
 
 if __name__ == "__main__":
