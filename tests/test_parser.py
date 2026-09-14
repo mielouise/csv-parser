@@ -234,3 +234,18 @@ def test_crlf_line_endings() -> None:
     result = parser.parse(csv_text)
 
     assert len(result) == 2
+
+def test_ignore_trailing_empty_row() -> None:
+    """
+    Test that trailing empty lines do not create rows.
+    """
+    parser = CSVParser()
+
+    csv_text = (
+        "name,age\n"
+        "Mie,23\n"
+    )
+
+    result = parser.parse(csv_text)
+
+    assert len(result) == 1

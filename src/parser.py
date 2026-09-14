@@ -146,11 +146,14 @@ class CSVParser:
                 "Malformed CSV: unclosed quoted field."
             )
 
-        current_row.append(
-            "".join(current_field)
+        current_row.append("".join(current_field))
+
+        is_empty_row = all(
+            not field.strip()
+            for field in current_row
         )
 
-        if current_row:
+        if not is_empty_row:
             rows.append(current_row)
 
         return rows
