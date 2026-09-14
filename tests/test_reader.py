@@ -16,6 +16,6 @@ def test_read_file(tmp_path: Path) -> None:
 
     reader = CSVReader()
 
-    content = reader.read(str(csv_file))
+    content = reader.read(csv_file)
 
     assert "Mie" in content

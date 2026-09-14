@@ -2,12 +2,15 @@
 Application entry point.
 """
 
+from pathlib import Path
+import sys
+
 from src.csv_reader import CSVReader
 from src.json_exporter import JsonExporter
 from src.parser import CSVParser
 
 
-def get_file_path() -> str:
+def get_file_path() -> Path:
     """
     Let the user choose a CSV file.
 
@@ -16,7 +19,7 @@ def get_file_path() -> str:
 
     Raises:
         ValueError:
-            If an invalid option is entered.
+            If an invalid menu choice is entered.
     """
     print("\nChoose a CSV file:")
     print("1. employees.csv")
@@ -28,15 +31,17 @@ def get_file_path() -> str:
     ).strip()
 
     if choice == "1":
-        return "data/employees.csv"
+        return Path("data/employees.csv")
 
     if choice == "2":
-        return "data/sogne.csv"
+        return Path("data/sogne.csv")
 
     if choice == "3":
-        return input(
-            "Enter the path to your CSV file: "
-        ).strip()
+        return Path(
+            input(
+                "Enter the path to your CSV file: "
+            ).strip()
+        )
 
     raise ValueError("Invalid choice.")
 
@@ -50,9 +55,12 @@ def main() -> None:
     exporter = JsonExporter()
 
     try:
-        file_path = get_file_path()
+        if len(sys.argv) > 1:
+            file_path = Path(sys.argv[1])
+        else:
+            file_path = get_file_path()
 
-        csv_text = reader.read(file_path)
+        csv_text = reader.read(str(file_path))
 
         parsed_data = parser.parse(csv_text)
 
@@ -61,10 +69,19 @@ def main() -> None:
         print(json_output)
 
     except FileNotFoundError:
-        print("Error: File not found.")
+        print(
+            f"Error: File '{file_path}' was not found."
+        )
 
     except ValueError as error:
-        print(f"Error: {error}")
+        print(
+            f"CSV parsing error: {error}"
+        )
+
+    except Exception as error:
+        print(
+            f"Unexpected error: {error}"
+        )
 
 
 if __name__ == "__main__":

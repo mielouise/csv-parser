@@ -30,7 +30,9 @@ class CSVParser:
                 If a row contains more values than headers.
         """
         if not text.strip():
-            raise ValueError("CSV input cannot be empty.")
+            raise ValueError(
+                "CSV input cannot be empty."
+            )
 
         rows: list[list[str]] = self._parse_rows(text)
 
@@ -63,23 +65,26 @@ class CSVParser:
 
         return parsed_rows
 
-    def _parse_rows(self, text: str) -> list[list[str]]:
+    def _parse_rows(
+        self,
+        text: str
+    ) -> list[list[str]]:
         """
         Parse CSV text into rows and fields.
 
-        Handles:
-        - quoted fields
-        - commas inside quoted fields
-        - escaped quotes ("")
-        - multiline quoted fields
-        - CRLF and LF line endings
+        Supports:
+        - Quoted fields
+        - Embedded commas
+        - Escaped quotes ("")
+        - Multiline fields
+        - LF and CRLF line endings
 
         Args:
             text:
                 CSV-formatted text.
 
         Returns:
-            List of rows where each row is a list of fields.
+            Parsed rows.
 
         Raises:
             ValueError:
@@ -91,11 +96,10 @@ class CSVParser:
         current_field: list[str] = []
 
         inside_quotes: bool = False
-
         index: int = 0
 
         while index < len(text):
-            character: str = text[index]
+            character = text[index]
 
             if character == '"':
                 if inside_quotes:
@@ -110,7 +114,10 @@ class CSVParser:
                 else:
                     inside_quotes = True
 
-            elif character == "," and not inside_quotes:
+            elif (
+                character == ","
+                and not inside_quotes
+            ):
                 current_row.append(
                     "".join(current_field)
                 )
@@ -131,7 +138,12 @@ class CSVParser:
                     "".join(current_field)
                 )
 
-                rows.append(current_row)
+                # Ignore completely empty rows
+                if any(
+                    field.strip()
+                    for field in current_row
+                ):
+                    rows.append(current_row)
 
                 current_row = []
                 current_field = []
@@ -146,14 +158,15 @@ class CSVParser:
                 "Malformed CSV: unclosed quoted field."
             )
 
-        current_row.append("".join(current_field))
-
-        is_empty_row = all(
-            not field.strip()
-            for field in current_row
+        current_row.append(
+            "".join(current_field)
         )
 
-        if not is_empty_row:
+        # Ignore trailing empty rows
+        if any(
+            field.strip()
+            for field in current_row
+        ):
             rows.append(current_row)
 
         return rows
