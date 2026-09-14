@@ -1,15 +1,7 @@
 """
 CSV parser module.
 
-Implements a simple CSV parser inspired by RFC 4180.
-
-Supported features:
-- Header row
-- Quoted fields
-- Commas within quoted fields
-- Escaped double quotes ("")
-- Empty fields
-- LF and CRLF line endings
+Implements a CSV parser inspired by RFC 4180.
 """
 
 
@@ -22,42 +14,48 @@ class CSVParser:
 
     def parse(self, text: str) -> list[dict[str, str]]:
         """
-        Parse CSV text into Python objects.
+        Parse CSV text.
 
         Args:
             text:
                 CSV-formatted text.
 
         Returns:
-            A list of dictionaries where each dictionary
-            represents a row in the CSV data.
+            A list of dictionaries representing CSV rows.
 
         Raises:
             ValueError:
-                If input is empty or malformed.
+                If the input is empty.
+                If duplicate headers exist.
+                If a row contains more values than headers.
         """
         if not text.strip():
             raise ValueError("CSV input cannot be empty.")
 
         rows: list[list[str]] = self._parse_rows(text)
 
-        if not rows:
-            raise ValueError("No CSV rows found.")
+        headers: list[str] = rows[0]
 
-        headers: list[str] = [
-            header.strip()
-            for header in rows[0]
-        ]
+        if len(headers) != len(set(headers)):
+            raise ValueError(
+                "Duplicate header names are not allowed."
+            )
 
         parsed_rows: list[dict[str, str]] = []
 
-        for values in rows[1:]:
+        for row_values in rows[1:]:
+
+            if len(row_values) > len(headers):
+                raise ValueError(
+                    "More values than headers in CSV row."
+                )
+
             row: dict[str, str] = {}
 
             for index, header in enumerate(headers):
                 row[header] = (
-                    values[index]
-                    if index < len(values)
+                    row_values[index]
+                    if index < len(row_values)
                     else ""
                 )
 
@@ -69,12 +67,23 @@ class CSVParser:
         """
         Parse CSV text into rows and fields.
 
+        Handles:
+        - quoted fields
+        - commas inside quoted fields
+        - escaped quotes ("")
+        - multiline quoted fields
+        - CRLF and LF line endings
+
         Args:
             text:
                 CSV-formatted text.
 
         Returns:
-            A list of rows where each row is a list of fields.
+            List of rows where each row is a list of fields.
+
+        Raises:
+            ValueError:
+                If a quoted field is not closed.
         """
         rows: list[list[str]] = []
 
@@ -90,12 +99,8 @@ class CSVParser:
 
             if character == '"':
                 if inside_quotes:
-                    next_character_exists = (
-                        index + 1 < len(text)
-                    )
-
                     if (
-                        next_character_exists
+                        index + 1 < len(text)
                         and text[index + 1] == '"'
                     ):
                         current_field.append('"')
@@ -111,7 +116,10 @@ class CSVParser:
                 )
                 current_field = []
 
-            elif character in ("\n", "\r") and not inside_quotes:
+            elif (
+                character in ("\n", "\r")
+                and not inside_quotes
+            ):
                 if (
                     character == "\r"
                     and index + 1 < len(text)
