@@ -2,7 +2,7 @@
 Command-line interface module.
 
 Handles user interaction, file selection and
-user-facing error messages.
+user-facing error handling.
 """
 
 from pathlib import Path
@@ -15,7 +15,8 @@ DATA_DIRECTORY: Path = Path("data")
 
 class CLI:
     """
-    Provide a command-line interface for the application.
+    Provide a command-line interface for the
+    CSV parser application.
     """
 
     EMPLOYEES_FILE: Path = (
@@ -28,7 +29,7 @@ class CLI:
 
     def __init__(self) -> None:
         """
-        Initialize the CLI.
+        Initialize the command-line interface.
         """
         self.application = CSVApplication()
 
@@ -36,15 +37,14 @@ class CLI:
         """
         Run the application.
 
-        Coordinates file selection and CSV processing
-        while handling user-facing errors.
+        Coordinates file selection and CSV
+        processing while handling user-facing
+        errors.
         """
         try:
-            file_path: Path = (
-                self._get_file_path()
-            )
+            file_path = self._get_file_path()
 
-            json_output: str = (
+            json_output = (
                 self.application.process_file(
                     file_path
                 )
@@ -54,22 +54,26 @@ class CLI:
 
         except FileNotFoundError:
             print(
-                f"File '{file_path}' was not found."
+                f"Error: File '{file_path}' "
+                "was not found."
             )
 
         except PermissionError:
             print(
-                f"Access denied to '{file_path}'."
+                f"Error: Access denied to "
+                f"'{file_path}'."
             )
 
         except UnicodeDecodeError:
             print(
-                "Unsupported file encoding."
+                "Error: Unsupported file "
+                "encoding."
             )
 
         except ValueError as error:
             print(
-                f"CSV validation error: {error}"
+                f"CSV validation error: "
+                f"{error}"
             )
 
     def _get_file_path(self) -> Path:
@@ -81,11 +85,12 @@ class CLI:
 
         Raises:
             ValueError:
-                If an invalid menu option is entered.
+                If an invalid menu choice
+                is entered.
         """
         self._print_menu()
 
-        choice: str = input(
+        choice = input(
             "\nEnter your choice (1-3): "
         ).strip()
 

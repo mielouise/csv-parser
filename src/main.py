@@ -2,15 +2,8 @@
 Application entry point.
 """
 
-from src.application import CSVApplication
-
-
-def main() -> None:
-    """
-    Run the CSV application.
-    """
-    CSVApplication().run()
+from src.cli import run
 
 
 if __name__ == "__main__":
-    main()
+    run()
