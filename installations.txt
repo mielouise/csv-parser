@@ -1,0 +1,92 @@
+CSV Parser
+Installation and Usage Guide
+
+Requirements
+------------
+- Python 3.13 or newer
+- Git
+
+1. Clone the Repository
+-----------------------
+
+git clone <repository-url>
+cd csv-parser
+
+2. Create a Virtual Environment
+-------------------------------
+
+python -m venv .venv
+
+3. Activate the Virtual Environment
+-----------------------------------
+
+Windows:
+
+.venv\Scripts\activate
+
+4. Install Dependencies
+-----------------------
+
+pip install -r requirements.txt
+
+5. Run the Application
+----------------------
+
+python -m src.main
+
+6. Run All Tests
+----------------
+
+python -m pytest
+
+7. Generate Coverage Report
+---------------------------
+
+python -m pytest --cov=src --cov-report=term-missing
+
+Expected Result
+---------------
+
+- All tests should pass.
+- Test coverage should be at least 95%.
+- Current project coverage: 98%.
+
+Project Structure
+-----------------
+
+src/
+    main.py
+    cli.py
+    application.py
+    csv_reader.py
+    parser.py
+    json_exporter.py
+
+tests/
+    test_application.py
+    test_cli.py
+    test_integration.py
+    test_json.py
+    test_main.py
+    test_parser.py
+    test_reader.py
+
+data/
+    employees.csv
+    sogne.csv
+
+Documentation
+-------------
+
+Further information can be found in:
+
+README.md
+
+The README contains:
+
+- Project description
+- Software architecture
+- UML documentation
+- RFC 4180 support
+- Design decisions
+- Testing strategy
