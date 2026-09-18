@@ -400,39 +400,40 @@ docs/uml-diagram.png
 ## UML Diagram
 
 ```mermaid
-classDiagram
+class*iagram
 
 class Main {
-    +main() void
-}
-
+    +main()
+}*
 class CLI {
-    +run() void
+    -application
+    *run()
 }
 
 class CSVApplication {
-    +process_file() str
+  * +process_file()
 }
 
-class CSVReader {
-    +read() str
+class CSVReade* {
+    +read()
 }
 
-class CSVParser {
-    +parse() list
+class CSVParser *
+    +parse()
 }
 
-class JsonExporter {
-    +to_json() str
+class JsonExporte* {
+    +to_json()
 }
 
-Main --> CLI : starts
-CLI --> CSVApplication : delegates
+Main --> CLI * starts
+CLI --> CSVApplication : d*legates
 
-CSVApplication *-- CSVReader
-*SVApplication *-- CSVParser
-CSVApp*ication *-- JsonExporter
+CSVApplication --> CSVRea*er
+CSVApplication --> CSVParser
+CS*Application --> JsonExporter
 ```
+*
 ---
 
 ## Lessons Learned
