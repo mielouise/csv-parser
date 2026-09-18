@@ -9,12 +9,17 @@ class CSVParser:
     """
     Parse CSV-formatted text into a list of dictionaries.
 
-    The first row is treated as column headers.
+    The first row is interpreted as column headers.
+    Data rows are returned as dictionaries where
+    header names map to field values.
     """
 
-    def parse(self, text: str) -> list[dict[str, str]]:
+    def parse(
+        self,
+        text: str,
+    ) -> list[dict[str, str]]:
         """
-        Parse CSV text.
+        Parse CSV-formatted text.
 
         Args:
             text:
@@ -26,7 +31,11 @@ class CSVParser:
         Raises:
             ValueError:
                 If the input is empty.
-                If duplicate headers exist.
+
+            ValueError:
+                If duplicate headers are detected.
+
+            ValueError:
                 If a row contains more values than headers.
         """
         if not text.strip():
@@ -34,7 +43,9 @@ class CSVParser:
                 "CSV input cannot be empty."
             )
 
-        rows: list[list[str]] = self._parse_rows(text)
+        rows: list[list[str]] = (
+            self._parse_rows(text)
+        )
 
         headers: list[str] = rows[0]
 
@@ -43,10 +54,11 @@ class CSVParser:
                 "Duplicate header names are not allowed."
             )
 
-        parsed_rows: list[dict[str, str]] = []
+        parsed_rows: list[
+            dict[str, str]
+        ] = []
 
         for row_values in rows[1:]:
-
             if len(row_values) > len(headers):
                 raise ValueError(
                     "More values than headers in CSV row."
@@ -67,28 +79,31 @@ class CSVParser:
 
     def _parse_rows(
         self,
-        text: str
+        text: str,
     ) -> list[list[str]]:
         """
         Parse CSV text into rows and fields.
 
-        Supports:
+        Supported features:
+
         - Quoted fields
         - Embedded commas
         - Escaped quotes ("")
         - Multiline fields
-        - LF and CRLF line endings
+        - Empty quoted fields ("")
+        - LF line endings
+        - CRLF line endings
 
         Args:
             text:
                 CSV-formatted text.
 
         Returns:
-            Parsed rows.
+            Parsed rows and fields.
 
         Raises:
             ValueError:
-                If a quoted field is not closed.
+                If a quoted field is not properly closed.
         """
         rows: list[list[str]] = []
 
@@ -96,12 +111,16 @@ class CSVParser:
         current_field: list[str] = []
 
         inside_quotes: bool = False
+        row_has_content: bool = False
+
         index: int = 0
 
         while index < len(text):
-            character = text[index]
+            character: str = text[index]
 
             if character == '"':
+                row_has_content = True
+
                 if inside_quotes:
                     if (
                         index + 1 < len(text)
@@ -121,6 +140,7 @@ class CSVParser:
                 current_row.append(
                     "".join(current_field)
                 )
+
                 current_field = []
 
             elif (
@@ -138,18 +158,24 @@ class CSVParser:
                     "".join(current_field)
                 )
 
-                # Ignore completely empty rows
-                if any(
-                    field.strip()
-                    for field in current_row
+                if (
+                    row_has_content
+                    or any(
+                        field.strip()
+                        for field in current_row
+                    )
                 ):
                     rows.append(current_row)
 
                 current_row = []
                 current_field = []
+                row_has_content = False
 
             else:
                 current_field.append(character)
+
+                if character.strip():
+                    row_has_content = True
 
             index += 1
 
@@ -162,10 +188,12 @@ class CSVParser:
             "".join(current_field)
         )
 
-        # Ignore trailing empty rows
-        if any(
-            field.strip()
-            for field in current_row
+        if (
+            row_has_content
+            or any(
+                field.strip()
+                for field in current_row
+            )
         ):
             rows.append(current_row)
 

@@ -1,8 +1,11 @@
 """
 Command-line interface module.
 
-Handles user interaction, file selection and
-user-facing error handling.
+Handles:
+
+- User interaction
+- File selection
+- User-facing error handling
 """
 
 from pathlib import Path
@@ -15,8 +18,13 @@ DATA_DIRECTORY: Path = Path("data")
 
 class CLI:
     """
-    Provide a command-line interface for the
-    CSV parser application.
+    Provide the command-line interface.
+
+    Responsible for:
+
+    - User interaction
+    - File selection
+    - Presenting errors to the user
     """
 
     EMPLOYEES_FILE: Path = (
@@ -29,9 +37,9 @@ class CLI:
 
     def __init__(self) -> None:
         """
-        Initialize the command-line interface.
+        Initialize application services.
         """
-        self.application = CSVApplication()
+        self._application = CSVApplication()
 
     def run(self) -> None:
         """
@@ -42,10 +50,12 @@ class CLI:
         errors.
         """
         try:
-            file_path = self._get_file_path()
+            file_path: Path = (
+                self._get_file_path()
+            )
 
-            json_output = (
-                self.application.process_file(
+            json_output: str = (
+                self._application.process_file(
                     file_path
                 )
             )
@@ -76,21 +86,26 @@ class CLI:
                 f"{error}"
             )
 
+        except Exception as error:
+            print(
+                f"Unexpected error: {error}"
+            )
+
     def _get_file_path(self) -> Path:
         """
-        Let the user select a CSV file.
+        Let the user choose a CSV file.
 
         Returns:
             Path to the selected CSV file.
 
         Raises:
             ValueError:
-                If an invalid menu choice
-                is entered.
+                If an invalid menu option is
+                entered.
         """
         self._print_menu()
 
-        choice = input(
+        choice: str = input(
             "\nEnter your choice (1-3): "
         ).strip()
 
