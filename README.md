@@ -95,7 +95,7 @@ data/
 Clone the repository:
 
 ```powershell
-git clone <repository-url>
+git clone https://github.com/mielouise/csv-parser
 cd csv-parser
 ```
 
