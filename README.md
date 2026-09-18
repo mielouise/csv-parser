@@ -401,20 +401,6 @@ The diagram illustrates the relationships between:
 and documents the layered architecture used by the application.
 ---
 
-## Lessons Learned
-
-This project provided practical experience with:
-
-- Manual parsing of structured data
-- RFC interpretation
-- Validation of malformed input
-- Automated testing
-- Software architecture
-- Continuous integration
-
-A key lesson learned was how many edge cases must be considered when implementing CSV parsing without relying on an existing library.
-
----
 
 ## Future Improvements
 
