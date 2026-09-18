@@ -384,7 +384,13 @@ The workflow executes on every push and pull request.
 
 ## UML Diagram
 
-The repository contains a UML class diagram documenting:
+The following UML class diagram illustrates the
+architecture of the application and the relationships
+between its core components.
+
+docs/uml-diagram.png
+
+The diagram illustrates the relationships between:
 
 - CLI
 - CSVApplication
@@ -392,48 +398,7 @@ The repository contains a UML class diagram documenting:
 - CSVParser
 - JsonExporter
 
-Location:
-
-```text
-docs/uml-diagram.png
-```
-## UML Diagram
-
-```mermaid
-class*iagram
-
-class Main {
-    +main()
-}*
-class CLI {
-    -application
-    *run()
-}
-
-class CSVApplication {
-  * +process_file()
-}
-
-class CSVReade* {
-    +read()
-}
-
-class CSVParser *
-    +parse()
-}
-
-class JsonExporte* {
-    +to_json()
-}
-
-Main --> CLI * starts
-CLI --> CSVApplication : d*legates
-
-CSVApplication --> CSVRea*er
-CSVApplication --> CSVParser
-CS*Application --> JsonExporter
-```
-*
+and documents the layered architecture used by the application.
 ---
 
 ## Lessons Learned
