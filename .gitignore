@@ -4,3 +4,7 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+# Generated test reports
+docs/test-results.txt
+docs/coverage.txt
+``
