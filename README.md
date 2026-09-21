@@ -85,7 +85,10 @@ tests/
 
 data/
 ├── employees.csv
-└── sogne.csv
+├── sogne.csv
+└── output/
+    ├── employees.json
+    └── sogne.json
 ```
 
 ---
@@ -132,8 +135,11 @@ The application presents a file-selection menu:
 ```
 
 After selecting a file, the parsed CSV data is displayed as structured JSON
-and written to a JSON file next to the selected CSV file. For example,
-`data/employees.csv` produces `data/employees.json`.
+and written to the `data/output/` directory. For example,
+`data/employees.csv` produces `data/output/employees.json`.
+
+Generated JSON files in `data/output/` are local output files and are excluded
+from Git by `.gitignore`.
 
 ---
 
