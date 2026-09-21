@@ -131,7 +131,9 @@ The application presents a file-selection menu:
 3. Custom CSV file
 ```
 
-After selecting a file, the parsed CSV data is displayed as JSON.
+After selecting a file, the parsed CSV data is displayed as structured JSON
+and written to a JSON file next to the selected CSV file. For example,
+`data/employees.csv` produces `data/employees.json`.
 
 ---
 
@@ -148,16 +150,18 @@ id,name
 ### Output
 
 ```json
-[
-    {
-        "id": "1",
-        "name": "Mie"
-    },
-    {
-        "id": "2",
-        "name": "Anna"
-    }
-]
+{
+    "employees": [
+        {
+            "id": "1",
+            "name": "Mie"
+        },
+        {
+            "id": "2",
+            "name": "Anna"
+        }
+    ]
+}
 ```
 
 ---
@@ -187,7 +191,7 @@ json_exporter.py
 | `CSVApplication` | Workflow coordination |
 | `CSVReader` | File access |
 | `CSVParser` | Parsing and validation |
-| `JsonExporter` | JSON serialization |
+| `JsonExporter` | Structured JSON serialization and file output |
 
 ### Design Principles
 
@@ -408,7 +412,7 @@ Potential future enhancements include:
 
 - Additional RFC 4180 compatibility
 - Configurable delimiters
-- Direct JSON file output
+- Configurable JSON metadata and output formats
 - Logging support
 - Command-line arguments
 

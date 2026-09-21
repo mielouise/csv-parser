@@ -110,6 +110,11 @@ def test_run_success(
         "process_file",
         lambda _path: '{"name": "Mie"}'
     )
+    monkeypatch.setattr(
+        cli._application,
+        "export_file",
+        lambda _input, _output: None,
+    )
 
     cli.run()
 

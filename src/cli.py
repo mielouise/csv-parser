@@ -61,6 +61,15 @@ class CLI:
             )
 
             print(json_output)
+            output_path = file_path.with_suffix(".json")
+            self._application.export_file(
+                file_path,
+                output_path,
+            )
+            print(
+                f"\nJSON file written to: "
+                f"{output_path}"
+            )
 
         except FileNotFoundError:
             print(

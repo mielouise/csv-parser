@@ -27,7 +27,7 @@ class CSVApplication:
         self._parser = CSVParser()
         self._exporter = JsonExporter()
 
-    def process_file(self,file_path: Path,) -> str:
+    def process_file(self, file_path: Path) -> str:
         """
         Process a CSV file and return JSON output.
 
@@ -55,4 +55,24 @@ class CSVApplication:
 
         parsed_data = self._parser.parse(csv_text)
 
-        return self._exporter.to_json(parsed_data)
+        return self._exporter.to_json(
+            parsed_data,
+            root_key=file_path.stem,
+        )
+
+    def export_file(
+        self,
+        input_path: Path,
+        output_path: Path,
+    ) -> None:
+        """
+        Read a CSV file and export structured JSON beside it.
+        """
+        csv_text = self._reader.read(input_path)
+        parsed_data = self._parser.parse(csv_text)
+
+        self._exporter.to_file(
+            parsed_data,
+            output_path,
+            root_key=input_path.stem,
+        )
