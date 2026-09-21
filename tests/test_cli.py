@@ -110,10 +110,15 @@ def test_run_success(
         "process_file",
         lambda _path: '{"name": "Mie"}'
     )
+
+    exported_paths: list[tuple[Path, Path]] = []
+
     monkeypatch.setattr(
         cli._application,
         "export_file",
-        lambda _input, _output: None,
+        lambda input_path, output_path: exported_paths.append(
+            (input_path, output_path)
+        ),
     )
 
     cli.run()
@@ -121,6 +126,9 @@ def test_run_success(
     captured = capsys.readouterr()
 
     assert "Mie" in captured.out
+    assert exported_paths == [
+        (Path("dummy.csv"), Path("data/output/dummy.json"))
+    ]
 
 
 def test_run_file_not_found(

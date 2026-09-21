@@ -20,7 +20,7 @@ dist/
 !.env.example
 
 # Generated application output
-data/*.json
+data/output/*.json
 
 # Operating-system and editor files
 .DS_Store

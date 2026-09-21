@@ -14,6 +14,7 @@ from src.application import CSVApplication
 
 
 DATA_DIRECTORY: Path = Path("data")
+OUTPUT_DIRECTORY: Path = DATA_DIRECTORY / "output"
 
 
 class CLI:
@@ -61,7 +62,8 @@ class CLI:
             )
 
             print(json_output)
-            output_path = file_path.with_suffix(".json")
+            OUTPUT_DIRECTORY.mkdir(parents=True, exist_ok=True)
+            output_path = OUTPUT_DIRECTORY / f"{file_path.stem}.json"
             self._application.export_file(
                 file_path,
                 output_path,
