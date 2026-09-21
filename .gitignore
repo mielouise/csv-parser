@@ -5,4 +5,24 @@ __pycache__/
 htmlcov/
 .venv/
 
-``
+# Python tooling and build artifacts
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+*.egg-info/
+build/
+dist/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Generated application output
+data/*.json
+
+# Operating-system and editor files
+.DS_Store
+Thumbs.db
+.idea/
